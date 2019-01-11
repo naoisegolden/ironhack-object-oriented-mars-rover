@@ -32,13 +32,13 @@ MarsRover.prototype.move;
  * @class
  *
  * @property {Number} width - The area width
- * @property {Number} heigh - The area height
+ * @property {Number} height - The area height
  * @property {Matrix} area - A matrix (array of arrays) of width x height
  * @property {Array} things - Array of objects (latitude, longitude, Finding or Obstacle).
  *
  * It has to put each Finding or Obstacle in random coordinates.
  */
-function Area(width, heigh, things) {}
+function Area(width, height, things) {}
 
 /**
  * Creates a Thing (parent class)
