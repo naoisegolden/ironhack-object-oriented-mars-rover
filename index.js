@@ -25,7 +25,52 @@ MarsRover.prototype.turnRight;
  * (BONUS) If there is an obstacle, it should say so and NOT advance.
  * (BONUS) If you are out of bounds, it should say so and NOT advance.
  */
-MarsRover.prototype.move;
+MarsRover.prototype.move = function() {
+    // Clear the console
+    console.clear();
+
+    // Change position depending on direction
+    switch (this.direction) {
+        case "N":
+            this.position.latitude += 1;
+            break;
+        case "E":
+            this.position.longitude += 1;
+            break;
+        case "S":
+            this.position.latitude -= 1;
+            break;
+        case "W":
+            this.position.longitude -= 1;
+            break;
+    }
+
+    // Inform of your findings
+    var thing = area[this.position.latitude][this.position.longitude]
+    if (!thing) {
+        // there is nothing
+        console.log(`I haven't found anything at latitude ${this.position.latitude}, longitude ${this.position.longitude}.`);
+    } else if (thing.type === "finding") {
+        console.log(`I found something! ${thing.name}`);
+    } else  {
+        console.log(`I found something but I don't know what it is: ${thing.name}`);
+    }
+
+    // Print a visualization of the area
+    for (var latitude = 0; latitude < this.area.width; latitude++) {
+        var row = [];
+        for (var longitude = 0; longitude < this.area.height; longitude++) {
+            if (latitude === this.position.latitude && longitude === this.position.longitude) {
+                row.push('🤖');
+            } else if (this.area[latitude][longitude].type === "finding") {
+                row.push('📦');
+            } else {
+                row.push('◻️');
+            }
+        }
+        console.log(row.join(""));
+    }
+};
 
 /**
  * Creates an Area
