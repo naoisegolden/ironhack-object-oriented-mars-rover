@@ -8,3 +8,7 @@ NASA has contracted you to develop the Mars Rover's software. You must use objec
 Follow the instructions in the comments in the `index.js` file.
 
 **Expected time to develop: between 2 and 4 hours.**
+
+## Solution
+
+You can find the solution in the [`solution`](../../tree/solution) branch.
