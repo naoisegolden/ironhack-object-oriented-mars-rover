@@ -89,5 +89,5 @@ var things = [
     new Obstacle("Alien ship")
 ];
 var area2 = new Area(10, 10, things);
-var rover2 = new rover("Mars Rover 2", area2);
+var rover2 = new MarsRover("Mars Rover 2", area2);
 */
