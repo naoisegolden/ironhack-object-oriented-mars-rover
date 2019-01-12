@@ -114,6 +114,17 @@ MarsRover.prototype.move = function() {
             break;
     }
 
+    // Check for out of bounds
+    if (
+        this.position.latitude < 0 ||
+        this.position.latitude >= this.area.height ||
+        this.position.longitude < 0 ||
+        this.position.longitude >= this.area.width
+    ) {
+        this.position.latitude = previousPosition.latitude;
+        this.position.longitude = previousPosition.longitude;
+    }
+
     // Check for things at this position
     var thing = this.area.area[this.position.latitude][this.position.longitude];
 
