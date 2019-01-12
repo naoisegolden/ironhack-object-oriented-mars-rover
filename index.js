@@ -7,17 +7,55 @@
  * @property {String} direction - The direction the rover is facing (N, S, E, W)
  * @property {Object} position - The position at which the rover is (latitude, longitude)
  */
-function MarsRover(name, area) {}
+function MarsRover(name, area) {
+    this.name = name;
+    this.area = area;
+    this.direction = "N";
+    this.position = {
+        latitude: 0,
+        longitude: 0
+    };
+}
 
 /**
  * Turns the rover to the left
  */
-MarsRover.prototype.turnLeft;
+MarsRover.prototype.turnLeft = function() {
+    switch (this.direction) {
+        case "N":
+            this.direction = "W";
+            break;
+        case "E":
+            this.direction = "N";
+            break;
+        case "S":
+            this.direction = "E";
+            break;
+        case "W":
+            this.direction = "S";
+            break;
+    }
+};
 
 /**
  * Turns the rover to the right
  */
-MarsRover.prototype.turnRight;
+MarsRover.prototype.turnRight = function () {
+    switch (this.direction) {
+        case "N":
+            this.direction = "E";
+            break;
+        case "E":
+            this.direction = "S";
+            break;
+        case "S":
+            this.direction = "W";
+            break;
+        case "W":
+            this.direction = "N";
+            break;
+    }
+};
 
 /**
  * Moves the rover forward to where it's facing. 
@@ -26,28 +64,44 @@ MarsRover.prototype.turnRight;
  * (BONUS) If you are out of bounds, it should say so and NOT advance.
  */
 MarsRover.prototype.move = function() {
-    // Clear the console
+    var robotSymbol;
+
+    // New "animation frame"
     console.clear();
 
     // Change position depending on direction
     switch (this.direction) {
         case "N":
             this.position.latitude += 1;
+            robotSymbol = "N";
             break;
         case "E":
             this.position.longitude += 1;
+            robotSymbol = "E";
             break;
         case "S":
             this.position.latitude -= 1;
+            robotSymbol = "S";
             break;
         case "W":
             this.position.longitude -= 1;
+            robotSymbol = "W";
             break;
     }
 
+    // Check for things at this position
+    var thing = undefined;
+    for (var i = 0; i < area.thingsWithPosition.length; i++) {
+        if (
+            this.area.thingsWithPosition[i].latitude === this.position.latitude &&
+            this.area.thingsWithPosition[i].longitude === this.position.longitude
+        ) {
+            thing = area.thingsWithPosition[i].thing;
+        }
+    }
+
     // Inform of your findings
-    var thing = area[this.position.latitude][this.position.longitude]
-    if (!thing) {
+    if (thing === undefined) {
         // there is nothing
         console.log(`I haven't found anything at latitude ${this.position.latitude}, longitude ${this.position.longitude}.`);
     } else if (thing.type === "finding") {
@@ -57,19 +111,19 @@ MarsRover.prototype.move = function() {
     }
 
     // Print a visualization of the area
+    var frame = [];
     for (var latitude = 0; latitude < this.area.width; latitude++) {
         var row = [];
         for (var longitude = 0; longitude < this.area.height; longitude++) {
             if (latitude === this.position.latitude && longitude === this.position.longitude) {
-                row.push('🤖');
-            } else if (this.area[latitude][longitude].type === "finding") {
-                row.push('📦');
+                row.push(robotSymbol);
             } else {
-                row.push('◻️');
+                row.push(' ');
             }
         }
-        console.log(row.join(""));
+        frame.push(row);
     }
+    console.table(frame);
 };
 
 /**
@@ -83,7 +137,21 @@ MarsRover.prototype.move = function() {
  *
  * It has to put each Finding or Obstacle in random coordinates.
  */
-function Area(width, height, things) {}
+function Area(width, height, things) {
+    this.thingsWithPosition = [];
+    this.area = []; // This is actually not needed
+    this.width = width;
+    this.height = height;
+
+    // Create the array of thingsWithPosition
+    for(var i = 0; i < things.length; i++) {
+        this.thingsWithPosition.push({
+            latitude: Math.floor(Math.random() * height),
+            longitude: Math.floor(Math.random() * width),
+            thing: things[i]
+        });
+    }
+}
 
 /**
  * Creates a Thing (parent class)
@@ -91,7 +159,10 @@ function Area(width, height, things) {}
  *
  * @property {String} name - Name of the thing
  */
-function Thing(name) {}
+function Thing(name) {
+    this.name = name;
+}
+
 
 /**
  * Creates a Finding (inherits from Thing)
@@ -100,7 +171,13 @@ function Thing(name) {}
  * @property {String} name - Name of the finding
  * @property {String} type - has to be "finding"
  */
-function Finding(name) {}
+function Finding(name) {
+    Thing.call(this, name);
+
+    this.type = "finding";
+}
+Finding.prototype = Object.create(Thing.prototype);
+Finding.prototype.constructor = Finding;
 
 /**
  * (BONUS) Creates an Obstacle (inherits from Thing)
@@ -109,7 +186,13 @@ function Finding(name) {}
  * @property {String} name - Name of the obstacle
  * @property {String} type - has to be "obstacle"
  */
-function Obstacle(name) {}
+function Obstacle(name) {
+    Thing.call(this, name);
+
+    this.type = "obstacle";
+}
+Obstacle.prototype = Object.create(Thing.prototype);
+Obstacle.prototype.constructor = Obstacle;
 
 var findings = [
     new Finding("Alien artifact"),
