@@ -18,7 +18,6 @@ function MarsRover(name, area) {
 
     // Print a visualization of the area
     this.printFrame = function () {
-        console.clear();
         var frame = [];
         for (var latitude = 0; latitude < this.area.width; latitude++) {
             var row = [];
@@ -30,12 +29,16 @@ function MarsRover(name, area) {
                     row.push('\uD83E\uDD16'); // 🤖
                 } else if (thing && thing.type === "finding") {
                     row.push('\uD83C\uDF81'); // 🎁
+                } else if (thing && thing.type === "obstacle") {
+                    row.push('\u26F0\uFE0F'); // ⛰️
                 } else {
                     row.push(' ');
                 }
             }
             frame.push(row);
         }
+
+        console.clear();
         console.table(frame);
         console.log(`Facing ${this.direction}`);
     }
@@ -90,6 +93,11 @@ MarsRover.prototype.turnRight = function () {
  * (BONUS) If you are out of bounds, it should say so and NOT advance.
  */
 MarsRover.prototype.move = function() {
+    var previousPosition = {
+        latitude: this.position.latitude,
+        longitude: this.position.longitude
+    };
+
     // Change position depending on direction
     switch (this.direction) {
         case "N":
@@ -109,13 +117,23 @@ MarsRover.prototype.move = function() {
     // Check for things at this position
     var thing = this.area.area[this.position.latitude][this.position.longitude];
 
-    // Inform of your findings
+    // Move back to the previous position if obstacle found
+    if (thing && thing.type === "obstacle") {
+        this.position.latitude = previousPosition.latitude;
+        this.position.longitude = previousPosition.longitude;
+    }
+
+    // Update frame
     this.printFrame();
+
+    // Inform of your findings
     if (!thing) {
         // there is nothing
         console.log(`I haven't found anything at latitude ${this.position.latitude}, longitude ${this.position.longitude}.`);
     } else if (thing.type === "finding") {
         console.log(`%c I found something! ${thing.name}`, 'color: green; font-weight: bold;');
+    } else if (thing.type === "obstacle") {
+        console.log(`%c I can't move because there is an obstacle! ${thing.name}`, 'color: red; font-weight: bold;');
     } else  {
         console.log(`%c I found something but I don't know what it is: ${thing.name}`, 'color: blue; font-weight: bold;');
     }
@@ -150,8 +168,8 @@ function Area(width, height, things) {
         this.area[latitude][longitude] = things[i];
     }
 
-    // Create the array of thingsWithPosition
     // FIXME: this is not needed
+    // Create the array of thingsWithPosition
     // for (var i = 0; i < things.length; i++) {
     //     this.thingsWithPosition.push({
     //         latitude: Math.floor(Math.random() * height),
@@ -202,6 +220,7 @@ function Obstacle(name) {
 Obstacle.prototype = Object.create(Thing.prototype);
 Obstacle.prototype.constructor = Obstacle;
 
+/*
 var findings = [
     new Finding("Alien artifact"),
     new Finding("Gold"),
@@ -216,8 +235,8 @@ rover.printFrame();
 // rover.moveLeft();
 // rover.moveRight();
 // etc…
+*/
 
-/* 
 // BONUS
 var things = [
     new Finding("Alien artifact"),
@@ -228,4 +247,5 @@ var things = [
 ];
 var area2 = new Area(10, 10, things);
 var rover2 = new MarsRover("Mars Rover 2", area2);
-*/
+
+rover2.printFrame();
