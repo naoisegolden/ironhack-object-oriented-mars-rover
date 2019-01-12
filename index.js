@@ -97,6 +97,7 @@ MarsRover.prototype.move = function() {
         latitude: this.position.latitude,
         longitude: this.position.longitude
     };
+    var isOutOfBounds = false;
 
     // Change position depending on direction
     switch (this.direction) {
@@ -123,6 +124,7 @@ MarsRover.prototype.move = function() {
     ) {
         this.position.latitude = previousPosition.latitude;
         this.position.longitude = previousPosition.longitude;
+        isOutOfBounds = true;
     }
 
     // Check for things at this position
@@ -138,7 +140,9 @@ MarsRover.prototype.move = function() {
     this.printFrame();
 
     // Inform of your findings
-    if (!thing) {
+    if (isOutOfBounds) {
+        console.log("%c I can't move because I reached the limit!", 'color: red; font-weight: bold;');
+    } else if (!thing) {
         // there is nothing
         console.log(`I haven't found anything at latitude ${this.position.latitude}, longitude ${this.position.longitude}.`);
     } else if (thing.type === "finding") {
