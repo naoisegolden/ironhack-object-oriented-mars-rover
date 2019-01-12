@@ -12,8 +12,8 @@ function MarsRover(name, area) {
     this.area = area;
     this.direction = "N";
     this.position = {
-        latitude: 0,
-        longitude: 0
+        latitude: Math.floor(Math.random() * area.height),
+        longitude: Math.floor(Math.random() * area.width)
     };
 
     // Print a visualization of the area
