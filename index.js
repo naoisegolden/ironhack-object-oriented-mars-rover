@@ -22,9 +22,14 @@ function MarsRover(name, area) {
         var frame = [];
         for (var latitude = 0; latitude < this.area.width; latitude++) {
             var row = [];
+
             for (var longitude = 0; longitude < this.area.height; longitude++) {
+                var thing = this.area.area[latitude][longitude];
+
                 if (latitude === this.position.latitude && longitude === this.position.longitude) {
-                    row.push('X');
+                    row.push('\uD83E\uDD16'); // 🤖
+                } else if (thing && thing.type === "finding") {
+                    row.push('\uD83C\uDF81'); // 🎁
                 } else {
                     row.push(' ');
                 }
@@ -32,6 +37,7 @@ function MarsRover(name, area) {
             frame.push(row);
         }
         console.table(frame);
+        console.log(`Facing ${this.direction}`);
     }
 }
 
@@ -101,19 +107,11 @@ MarsRover.prototype.move = function() {
     }
 
     // Check for things at this position
-    var thing = undefined;
-    for (var i = 0; i < area.thingsWithPosition.length; i++) {
-        if (
-            this.area.thingsWithPosition[i].latitude === this.position.latitude &&
-            this.area.thingsWithPosition[i].longitude === this.position.longitude
-        ) {
-            thing = area.thingsWithPosition[i].thing;
-        }
-    }
+    var thing = this.area.area[this.position.latitude][this.position.longitude];
 
     // Inform of your findings
     this.printFrame();
-    if (thing === undefined) {
+    if (!thing) {
         // there is nothing
         console.log(`I haven't found anything at latitude ${this.position.latitude}, longitude ${this.position.longitude}.`);
     } else if (thing.type === "finding") {
@@ -136,18 +134,31 @@ MarsRover.prototype.move = function() {
  */
 function Area(width, height, things) {
     this.thingsWithPosition = [];
-    this.area = []; // This is actually not needed
+    this.area = [];
     this.width = width;
     this.height = height;
 
-    // Create the array of thingsWithPosition
-    for(var i = 0; i < things.length; i++) {
-        this.thingsWithPosition.push({
-            latitude: Math.floor(Math.random() * height),
-            longitude: Math.floor(Math.random() * width),
-            thing: things[i]
-        });
+    // Create matrix
+    for (var i = 0; i < height; i++) {
+        this.area.push(new Array(width));
     }
+
+    // Put things in area
+    for (var i = 0; i < things.length; i++) {
+        var latitude = Math.floor(Math.random() * height);
+        var longitude = Math.floor(Math.random() * width);
+        this.area[latitude][longitude] = things[i];
+    }
+
+    // Create the array of thingsWithPosition
+    // FIXME: this is not needed
+    // for (var i = 0; i < things.length; i++) {
+    //     this.thingsWithPosition.push({
+    //         latitude: Math.floor(Math.random() * height),
+    //         longitude: Math.floor(Math.random() * width),
+    //         thing: things[i]
+    //     });
+    // }
 }
 
 /**
@@ -198,6 +209,8 @@ var findings = [
 ];
 var area = new Area(10, 10, findings);
 var rover = new MarsRover("Mars Rover 1", area);
+
+rover.printFrame();
 
 // rover.move();
 // rover.moveLeft();
