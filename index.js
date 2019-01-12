@@ -1,11 +1,13 @@
 /**
  * Creates a MarsRover
  * @class
- * 
+ *
  * @property {String} name - The name
- * @property {Area} area - The matrix that the rover needs to explore
+ * @property {Area} area - Area containing the matrix that the rover needs to explore
  * @property {String} direction - The direction the rover is facing (N, S, E, W)
  * @property {Object} position - The position at which the rover is (latitude, longitude)
+ *
+ * On instantiating a new MarsRover, the position should be random; just like a landing.
  */
 function MarsRover(name, area) {}
 
@@ -23,7 +25,7 @@ MarsRover.prototype.turnRight;
  * Moves the rover forward to where it's facing. 
  * If there is a finding, it should announce it!
  * (BONUS) If there is an obstacle, it should say so and NOT advance.
- * (BONUS) If you are out of bounds, it should say so and NOT advance.
+ * (BONUS) If the rover is are out of bounds, it should say so and NOT advance.
  */
 MarsRover.prototype.move;
 
@@ -33,10 +35,12 @@ MarsRover.prototype.move;
  *
  * @property {Number} width - The area width
  * @property {Number} height - The area height
- * @property {Matrix} area - A matrix (array of arrays) of width x height
- * @property {Array} thingsWithPosition - Array of objects (latitude, longitude, Finding or Obstacle).
+ * @property {Array} matrix - A matrix (array of arrays) of width x height
  *
- * It has to put each Finding or Obstacle in random coordinates.
+ * @param {Array} things - Array of Things (Finding or Obstacle instances).
+ *
+ * The constructor must create a matrix and put each Finding or Obstacle in random coordinates.
+ * The result should be a matrix with either undefined values or a Thing instance.
  */
 function Area(width, height, things) {}
 
@@ -74,11 +78,6 @@ var findings = [
 var area = new Area(10, 10, findings);
 var rover = new MarsRover("Mars Rover 1", area);
 
-// rover.move();
-// rover.moveLeft();
-// rover.moveRight();
-// etc…
-
 /* 
 // BONUS
 var things = [
@@ -88,6 +87,11 @@ var things = [
     new Obstacle("Rock"),
     new Obstacle("Alien ship")
 ];
-var area2 = new Area(10, 10, things);
-var rover2 = new MarsRover("Mars Rover 2", area2);
+var area = new Area(10, 10, things);
+var rover = new MarsRover("Mars Rover", area);
 */
+
+// rover.move();
+// rover.moveLeft();
+// rover.moveRight();
+// etc…
