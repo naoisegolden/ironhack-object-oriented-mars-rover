@@ -26,7 +26,12 @@ function MarsRover(name, area) {
                 var thing = this.area.area[latitude][longitude];
 
                 if (latitude === this.position.latitude && longitude === this.position.longitude) {
-                    row.push('\uD83E\uDD16'); // 🤖
+                    switch (this.direction) {
+                        case "N": row.push('\ud83d\udd3d'); break; // 🔽
+                        case "E": row.push('\u25B6\uFE0F'); break; // ▶️
+                        case "S": row.push('\ud83d\udd3c'); break; // 🔼
+                        case "W": row.push('\u25C0\uFE0F'); break; // ◀️
+                    }
                 } else if (thing && thing.type === "finding") {
                     row.push('\uD83C\uDF81'); // 🎁
                 } else if (thing && thing.type === "obstacle") {
