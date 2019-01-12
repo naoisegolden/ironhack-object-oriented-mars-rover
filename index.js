@@ -34,7 +34,7 @@ MarsRover.prototype.move;
  * @property {Number} width - The area width
  * @property {Number} height - The area height
  * @property {Matrix} area - A matrix (array of arrays) of width x height
- * @property {Array} things - Array of objects (latitude, longitude, Finding or Obstacle).
+ * @property {Array} thingsWithPosition - Array of objects (latitude, longitude, Finding or Obstacle).
  *
  * It has to put each Finding or Obstacle in random coordinates.
  */
@@ -72,7 +72,7 @@ var findings = [
     new Finding("Water")
 ];
 var area = new Area(10, 10, findings);
-var rover = new rover("Mars Rover 1", area);
+var rover = new MarsRover("Mars Rover 1", area);
 
 // rover.move();
 // rover.moveLeft();
