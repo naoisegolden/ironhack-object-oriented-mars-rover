@@ -15,6 +15,24 @@ function MarsRover(name, area) {
         latitude: 0,
         longitude: 0
     };
+
+    // Print a visualization of the area
+    this.printFrame = function () {
+        console.clear();
+        var frame = [];
+        for (var latitude = 0; latitude < this.area.width; latitude++) {
+            var row = [];
+            for (var longitude = 0; longitude < this.area.height; longitude++) {
+                if (latitude === this.position.latitude && longitude === this.position.longitude) {
+                    row.push('X');
+                } else {
+                    row.push(' ');
+                }
+            }
+            frame.push(row);
+        }
+        console.table(frame);
+    }
 }
 
 /**
@@ -35,6 +53,7 @@ MarsRover.prototype.turnLeft = function() {
             this.direction = "S";
             break;
     }
+    this.printFrame();
 };
 
 /**
@@ -55,6 +74,7 @@ MarsRover.prototype.turnRight = function () {
             this.direction = "N";
             break;
     }
+    this.printFrame();
 };
 
 /**
@@ -64,28 +84,19 @@ MarsRover.prototype.turnRight = function () {
  * (BONUS) If you are out of bounds, it should say so and NOT advance.
  */
 MarsRover.prototype.move = function() {
-    var robotSymbol;
-
-    // New "animation frame"
-    console.clear();
-
     // Change position depending on direction
     switch (this.direction) {
         case "N":
             this.position.latitude += 1;
-            robotSymbol = "N";
             break;
         case "E":
             this.position.longitude += 1;
-            robotSymbol = "E";
             break;
         case "S":
             this.position.latitude -= 1;
-            robotSymbol = "S";
             break;
         case "W":
             this.position.longitude -= 1;
-            robotSymbol = "W";
             break;
     }
 
@@ -101,29 +112,15 @@ MarsRover.prototype.move = function() {
     }
 
     // Inform of your findings
+    this.printFrame();
     if (thing === undefined) {
         // there is nothing
         console.log(`I haven't found anything at latitude ${this.position.latitude}, longitude ${this.position.longitude}.`);
     } else if (thing.type === "finding") {
-        console.log(`I found something! ${thing.name}`);
+        console.log(`%c I found something! ${thing.name}`, 'color: green; font-weight: bold;');
     } else  {
-        console.log(`I found something but I don't know what it is: ${thing.name}`);
+        console.log(`%c I found something but I don't know what it is: ${thing.name}`, 'color: blue; font-weight: bold;');
     }
-
-    // Print a visualization of the area
-    var frame = [];
-    for (var latitude = 0; latitude < this.area.width; latitude++) {
-        var row = [];
-        for (var longitude = 0; longitude < this.area.height; longitude++) {
-            if (latitude === this.position.latitude && longitude === this.position.longitude) {
-                row.push(robotSymbol);
-            } else {
-                row.push(' ');
-            }
-        }
-        frame.push(row);
-    }
-    console.table(frame);
 };
 
 /**
